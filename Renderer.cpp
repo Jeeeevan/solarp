@@ -15,6 +15,15 @@ Renderer::Renderer(unsigned int WINDOW_WIDTH,unsigned int WINDOW_HEIGHT,std::str
     }
 }
 
+void Renderer::update(std::vector<CelestialBody>& bodies)
+{
+    if(trail){
+        for(auto& body:bodies)
+            calculateOrbitTrail(body); 
+    }
+    calculateScreenPosition(bodies);
+}
+
 void Renderer::handleEvents()
 {
     while (const std::optional event = window.pollEvent())
@@ -60,6 +69,7 @@ void Renderer::initScale(std::vector<CelestialBody>& bodies)
     targetRadius = WINDOW_WIDTH / 2.0f - (2 * maxBody->radius); // Diameter of the furthest planet sized margin
     // targetRadius = std::min(WINDOW_WIDTH, WINDOW_HEIGHT) / 2.0f - (2 * maxBody->radius); // Diameter of the furthest planet sized margin
 }
+
 void Renderer::calculateScreenPosition(std::vector<CelestialBody>& bodies)
 {
     for(auto& body:bodies)
@@ -76,7 +86,11 @@ void Renderer::calculateScreenPosition(std::vector<CelestialBody>& bodies)
 void Renderer::draw(std::vector<CelestialBody>& bodies)
 {
     window.clear(sf::Color::Black);
+
     for(auto& body : bodies){
+            if(trail){
+                drawOrbitTrail(body);
+            }
             drawBody(body);
         }
     window.display();
@@ -121,4 +135,22 @@ void Renderer::drawBody(CelestialBody& body){
     // Position below the circle
     text.setPosition({pos_x, pos_y + radius + 8.f});
     window.draw(text);
+}
+
+void Renderer::drawOrbitTrail(CelestialBody& body)
+{
+    sf::VertexArray dots(sf::PrimitiveType::Points);
+    for(auto& trail:body.trail){
+        dots.append(sf::Vertex({trail.x,trail.y},body.color));
+    }
+    window.draw(dots);
+}
+
+void Renderer::calculateOrbitTrail(CelestialBody& body)
+{
+    body.trail.push_front({body.pos_x,body.pos_y});
+
+    if(body.trail.size()>TRAIL_LENGTH){
+        body.trail.pop_back();
+    }
 }

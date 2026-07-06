@@ -1,5 +1,6 @@
 #pragma once
 
+#include <deque>
 #include <SFML/Graphics.hpp>
 class CelestialBody{
     public:
@@ -9,6 +10,7 @@ class CelestialBody{
         float y; // y coordinate in space (AU unit)
         float pos_x; // x coordinate in screen (pixel unit)
         float pos_y; // y coordinate in screen (pixel unit)
+        std::deque<sf::Vector2f>  trail;
         sf::Vector2f v; // AU/s
         sf::Vector2f net_force; // AU.Em/s^2
         float mass; // (Earth mass unit)

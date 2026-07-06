@@ -51,8 +51,8 @@ int main() {
         physics.calculateForce(bodies);
         physics.calculateMotion(bodies,deltaTime);
         physics.calculatePosition(bodies,deltaTime);
-        renderer.calculateScreenPosition(bodies);
         
+        renderer.update(bodies);
         renderer.draw(bodies);
     }
 
