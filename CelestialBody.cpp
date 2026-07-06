@@ -3,12 +3,10 @@
 #include <vector>
 #define _USE_MATH_DEFINES
 
-CelestialBody::CelestialBody(std::string name,float pos_x,float pos_y, float radius,float mass,sf::Color color,int dot_density){
+CelestialBody::CelestialBody(std::string name,float x,float y, float radius,float mass,sf::Color color,int dot_density){
     this->name =name;
-
-    this->pos_x=pos_x;
-    this->pos_y=pos_y;
-    this->x = 
+    this->x = x;
+    this->y = y; 
     this->radius=radius;
     this->mass=mass;
     this->color = color;
