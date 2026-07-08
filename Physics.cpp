@@ -8,6 +8,15 @@ Physics::Physics()
     this->total_mass = 0;
 }
 
+void Physics::update(std::vector<CelestialBody>& bodies,float deltaTime)
+{
+    calculateForce(bodies);
+    calculateMotion(bodies,deltaTime);
+    calculatePosition(bodies,deltaTime);
+}
+
+
+
 void Physics::initOrbitalVelocity(std::vector<CelestialBody>& bodies)
 {
     Physics::calculateBaryCenter(bodies);

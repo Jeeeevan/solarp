@@ -28,7 +28,7 @@ int main() {
     std::cout << "Intializing Celestial Bodies..."<<"\n";
     std::vector<CelestialBody> bodies = {
         CelestialBody("Sun",     0.f,     0.f,    50.f,  333000.f,  sf::Color::White,          25),
-        CelestialBody("Mercury", 0.39f,   0.f,    3.f,   0.0553f,  sf::Color(169,169,169),    10),
+        CelestialBody("Mercury", 0.39f,   0.f,    3.f,   0.0553f,  sf::Color::Green,    10),
         CelestialBody("Venus",   0.72f,   0.f,    5.f,   0.815f,   sf::Color(255,198,73),     12),
         CelestialBody("Earth",   1.0f,    0.f,    5.f,   1.0f,   sf::Color::Blue,           12),
         CelestialBody("Mars",    1.52f,   0.f,    4.f,   0.107f,  sf::Color::Red,            12),
@@ -48,9 +48,8 @@ int main() {
             renderer.closeWindow();
         }
         float deltaTime = deltaClock.restart().asSeconds() * TIME_SCALE;
-        physics.calculateForce(bodies);
-        physics.calculateMotion(bodies,deltaTime);
-        physics.calculatePosition(bodies,deltaTime);
+        
+        physics.update(bodies,deltaTime);
         
         renderer.update(bodies);
         renderer.draw(bodies);

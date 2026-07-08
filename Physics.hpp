@@ -10,7 +10,7 @@ class Physics{
         float total_mass;
 
         Physics();
-
+        void update(std::vector<CelestialBody>& bodies,float deltaTime);
         void initOrbitalVelocity(std::vector<CelestialBody>& bodies);
         void calculateForce(std::vector<CelestialBody>& bodies);
         void calculateMotion(std::vector<CelestialBody>& bodies,float deltaTime);

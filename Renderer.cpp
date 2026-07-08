@@ -17,11 +17,11 @@ Renderer::Renderer(unsigned int WINDOW_WIDTH,unsigned int WINDOW_HEIGHT,std::str
 
 void Renderer::update(std::vector<CelestialBody>& bodies)
 {
+    calculateScreenPosition(bodies);
     if(trail){
         for(auto& body:bodies)
             calculateOrbitTrail(body); 
     }
-    calculateScreenPosition(bodies);
 }
 
 void Renderer::handleEvents()
@@ -139,9 +139,14 @@ void Renderer::drawBody(CelestialBody& body){
 
 void Renderer::drawOrbitTrail(CelestialBody& body)
 {
-    sf::VertexArray dots(sf::PrimitiveType::Points);
-    for(auto& trail:body.trail){
-        dots.append(sf::Vertex({trail.x,trail.y},body.color));
+    sf::VertexArray dots(sf::PrimitiveType::LineStrip);
+    int size = body.trail.size();
+    for(int i = 0; i < size; i++)
+    {
+        float alpha = 255.f * (1.f - (float)i / size);
+        sf::Color c = body.color;
+        c.a = static_cast<uint8_t>(alpha);
+        dots.append(sf::Vertex(body.trail[i], c));
     }
     window.draw(dots);
 }
