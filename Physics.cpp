@@ -10,9 +10,14 @@ Physics::Physics()
 
 void Physics::update(std::vector<CelestialBody>& bodies,float deltaTime)
 {
-    calculateForce(bodies);
-    calculateMotion(bodies,deltaTime);
-    calculatePosition(bodies,deltaTime);
+    accumulator += deltaTime;
+    accumulator = std::min(accumulator, MAXIMUM_ALLOWED_TIMESTEP);
+    while(accumulator>=TIME_STEP){
+        calculateForce(bodies);
+        calculateMotion(bodies,deltaTime * TIME_SCALE);
+        calculatePosition(bodies,deltaTime * TIME_SCALE);
+        accumulator -= TIME_STEP;
+    }
 }
 
 

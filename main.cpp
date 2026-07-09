@@ -47,11 +47,12 @@ int main() {
         if(renderer.closed){
             renderer.closeWindow();
         }
-        float deltaTime = deltaClock.restart().asSeconds() * TIME_SCALE;
+        float deltaTime = deltaClock.restart().asSeconds();
         
         physics.update(bodies,deltaTime);
         
         renderer.update(bodies);
+        
         renderer.draw(bodies);
     }
 
