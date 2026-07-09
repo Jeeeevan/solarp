@@ -9,15 +9,21 @@
 #include "Physics.hpp"
 #include "Renderer.hpp"
 
+struct AppState {
+    bool paused = false;
+    bool running = true;
+};
 
 int main() {
+    //Instantiating app state
+    std::cout<<"Instantiating App state"<<"\n";
+    AppState state;
     
-    //Instantiating Physics class
-    std::cout<<"Instantiating Physics class";
+    std::cout<<"Instantiating Physics class"<<"\n";
     Physics physics;
 
     //Instantiating Renderer class
-    std::cout<<"Instantiating Renderer class";
+    std::cout<<"Instantiating Renderer class"<<"\n";
     Renderer renderer(1900,1060,"Solarp System",true); // true to maximise the window
 
     const float TIME_SCALE = 1e6f;
@@ -38,21 +44,41 @@ int main() {
         CelestialBody("Neptune", 30.1f,   0.f,    11.f,  17.1f,    sf::Color(70,130,180),     15)
     };
     
-    std::cout << "Starting gameloop..."<<"\n";
+    
     physics.initOrbitalVelocity(bodies);
     renderer.initScale(bodies);
+    std::cout << "Starting gameloop..."<<"\n";
     sf::Clock deltaClock;
     while (renderer.isWindowOpen()) {
+        
         renderer.handleEvents(); //Start listening for events
-        if(renderer.closed){
+        for(auto& e:renderer.events){
+            switch(e) {
+                case Renderer::AppEvent::close: {
+                    state.running = false;
+                    break;}
+                case Renderer::AppEvent::togglePause:   {
+                    state.paused = !state.paused; 
+                    break;
+                }
+            }
+        }
+        renderer.events.clear();
+        
+        float deltaTime = deltaClock.restart().asSeconds();
+        if(!state.running){
             renderer.closeWindow();
         }
-        float deltaTime = deltaClock.restart().asSeconds();
+
+        if(state.paused){
+
+            continue;
+        }
         
         physics.update(bodies,deltaTime);
         
         renderer.update(bodies);
-        
+
         renderer.draw(bodies);
     }
 

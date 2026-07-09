@@ -30,10 +30,19 @@ void Renderer::handleEvents()
     {
         if (event->is<sf::Event::Closed>())
         {
-            closed = true;
+            events.push_back(AppEvent::close);
+
+        }
+        
+        if(const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+            if(keyPressed->code == sf::Keyboard::Key::Space){
+                events.push_back(AppEvent::togglePause);
+            }
         }
     }
 }
+
+
 
 void Renderer::closeWindow()
 {
