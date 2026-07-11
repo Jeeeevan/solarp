@@ -3,7 +3,7 @@
 #include <vector>
 #define _USE_MATH_DEFINES
 
-CelestialBody::CelestialBody(std::string name,float x,float y, float radius,float mass,sf::Color color,int dot_density){
+CelestialBody::CelestialBody(std::string name,float x,float y, float radius,float mass,sf::Color color,int dot_density,float e){
     this->name =name;
     this->x = x;
     this->y = y; 
@@ -13,6 +13,7 @@ CelestialBody::CelestialBody(std::string name,float x,float y, float radius,floa
     this->dot_density =dot_density;
     this->v ={0,0};
     this->net_force={0,0};
+    this->eccentricity=e;
 }
 
 

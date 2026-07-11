@@ -14,9 +14,11 @@ class CelestialBody{
         sf::Vector2f v; // AU/s
         sf::Vector2f net_force; // AU.Em/s^2
         float mass; // (Earth mass unit)
+        float eccentricity;
+        float a;//semi major axis diameter
         int dot_density;
         float dot_radius;
         sf::Color color;
-        CelestialBody(std::string name,float x, float y, float radius, float mass,sf::Color color,int dot_density);
+        CelestialBody(std::string name,float x, float y, float radius, float mass,sf::Color color,int dot_density,float e);
         void Draw(sf::RenderWindow& window,sf::Font& font);
 };

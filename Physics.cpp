@@ -35,7 +35,8 @@ void Physics::initOrbitalVelocity(std::vector<CelestialBody>& bodies)
         {
             continue;
         }
-        float v_magnitude = sqrt(G * total_mass/r );
+        body.a = r / (1 - body.eccentricity) ;//semi-major axis of the ellipse
+        float v_magnitude = sqrt((2*G * total_mass/r )-(G* total_mass /body.a));
         // std::cout<<"Orbital velocity of "<<body.name<<" = "<<v_magnitude;
         body.v = {r_vector.y/r *  v_magnitude,-1 * r_vector.x/r * v_magnitude};
     }
