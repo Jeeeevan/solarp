@@ -70,7 +70,9 @@ int main() {
         }
 
         if(state.paused){
-
+            
+            renderer.update(bodies);
+            renderer.draw(bodies);
             continue;
         }
         
