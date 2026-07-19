@@ -3,8 +3,13 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "CelestialBody.hpp"
+#include "Camera.hpp"
 
 class Renderer{
+    private:
+        Camera camera;
+        unsigned int WINDOW_WIDTH;
+        unsigned int WINDOW_HEIGHT;
     public:
         enum class AppEvent {
             togglePause,
@@ -12,14 +17,12 @@ class Renderer{
         };
         
         sf::RenderWindow window;
-        unsigned int WINDOW_WIDTH;
-        unsigned int WINDOW_HEIGHT;
         std::string name;
         sf::Font font;
 
         bool trail = true;
-        float distanceScale;
-        float targetRadius; 
+        static constexpr float EARTH_RADIUS_AU = 4.26e-5f;
+        static constexpr float MIN_PLANET_RADIUS_PX = 2.0f;
         int TRAIL_LENGTH = 10000;
 
         std::vector<AppEvent> events;
@@ -40,4 +43,6 @@ class Renderer{
         void loadFont(std::string path);
         void calculateScreenPosition(std::vector<CelestialBody>& bodies);
         void initScale(std::vector<CelestialBody>& bodies);
+        void calculateBodySize(CelestialBody& body);
+
 };

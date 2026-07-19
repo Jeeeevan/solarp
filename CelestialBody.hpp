@@ -6,6 +6,7 @@ class CelestialBody{
     public:
         std::string name;
         float radius; //(Earth radius unit)
+        float radius_px; //(Earth pixel unit)
         float x; // x coordinate in space (AU unit)
         float y; // y coordinate in space (AU unit)
         float pos_x; // x coordinate in screen (pixel unit)

@@ -33,20 +33,19 @@ int main() {
     
     std::cout << "Intializing Celestial Bodies..."<<"\n";
     std::vector<CelestialBody> bodies = {
-        CelestialBody("Sun",     0.f,     0.f,    50.f,  333000.f,  sf::Color::White,       25, 0.0f),
-        CelestialBody("Mercury", 0.39f,   0.f,    3.f,   0.0553f,   sf::Color::Green,       10, 0.206f),
-        CelestialBody("Venus",   0.72f,   0.f,    5.f,   0.815f,    sf::Color(255,198,73),  12, 0.007f),
-        CelestialBody("Earth",   1.0f,    0.f,    5.f,   1.0f,      sf::Color::Blue,        12, 0.017f),
-        CelestialBody("Mars",    1.52f,   0.f,    4.f,   0.107f,    sf::Color::Red,         12, 0.093f),
-        CelestialBody("Jupiter", 5.2f,    0.f,    20.f,  317.8f,    sf::Color(255,165,0),   20, 0.049f),
-        CelestialBody("Saturn",  9.58f,   0.f,    17.f,  95.2f,     sf::Color(210,180,140), 18, 0.057f),
-        CelestialBody("Uranus",  19.2f,   0.f,    12.f,  14.5f,     sf::Color(173,216,230), 15, 0.046f),
-        CelestialBody("Neptune", 30.1f,   0.f,    11.f,  17.1f,     sf::Color(70,130,180),  15, 0.010f)
+        CelestialBody("Sun",      0.f,    0.f,  109.1f,   333000.f, sf::Color::White,          100, 0.0f),
+        CelestialBody("Mercury",  0.39f,  0.f,    0.383f,      0.0553f, sf::Color::Green,       10, 0.206f),
+        CelestialBody("Venus",    0.72f,  0.f,    0.949f,      0.815f,  sf::Color(255,198,73),  12, 0.007f),
+        CelestialBody("Earth",    1.0f,   0.f,    1.0f,        1.0f,    sf::Color::Blue,         12, 0.017f),
+        CelestialBody("Mars",     1.52f,  0.f,    0.532f,      0.107f,  sf::Color::Red,          12, 0.093f),
+        CelestialBody("Jupiter",  5.2f,   0.f,   10.97f,     317.8f,    sf::Color(255,165,0),    20, 0.049f),
+        CelestialBody("Saturn",   9.58f,  0.f,    9.14f,      95.2f,    sf::Color(210,180,140),  18, 0.057f),
+        CelestialBody("Uranus",  19.2f,   0.f,    3.98f,      14.5f,    sf::Color(173,216,230),  15, 0.046f),
+        CelestialBody("Neptune", 30.1f,   0.f,    3.86f,      17.1f,    sf::Color(70,130,180),   15, 0.010f)
     };
     
     
     physics.initOrbitalVelocity(bodies);
-    renderer.initScale(bodies);
     std::cout << "Starting gameloop..."<<"\n";
     sf::Clock deltaClock;
     while (renderer.isWindowOpen()) {
