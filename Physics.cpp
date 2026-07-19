@@ -14,8 +14,8 @@ void Physics::update(std::vector<CelestialBody>& bodies,float deltaTime)
     accumulator = std::min(accumulator, MAXIMUM_ALLOWED_TIMESTEP);
     while(accumulator>=TIME_STEP){
         calculateForce(bodies);
-        calculateMotion(bodies,deltaTime * TIME_SCALE);
-        calculatePosition(bodies,deltaTime * TIME_SCALE);
+        calculateMotion(bodies,TIME_STEP * TIME_SCALE);
+        calculatePosition(bodies,TIME_STEP * TIME_SCALE);
         accumulator -= TIME_STEP;
     }
 }
