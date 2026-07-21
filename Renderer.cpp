@@ -3,6 +3,7 @@
 #include <cmath>
 #include <Windows.h>
 #include <iostream>
+#include <thread>
 
 Renderer::Renderer(unsigned int WINDOW_WIDTH,unsigned int WINDOW_HEIGHT,std::string name,bool isMaximise): camera(WINDOW_WIDTH, WINDOW_HEIGHT)
 {
@@ -10,6 +11,7 @@ Renderer::Renderer(unsigned int WINDOW_WIDTH,unsigned int WINDOW_HEIGHT,std::str
     this->WINDOW_HEIGHT = WINDOW_HEIGHT;
     this->name = name;
     window = sf::RenderWindow(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), name);
+    window.setView(sf::View(sf::FloatRect({0.f, 0.f}, {static_cast<float>(WINDOW_WIDTH), static_cast<float>(WINDOW_HEIGHT)})));
     if (isMaximise){
         maximiseWindow();
     }
@@ -17,14 +19,15 @@ Renderer::Renderer(unsigned int WINDOW_WIDTH,unsigned int WINDOW_HEIGHT,std::str
 
 void Renderer::update(std::vector<CelestialBody*>& bodies)
 {
-    calculateScreenPosition(bodies);
+    refreshBodyLayout(bodies);
+
     if(trail){
         for(auto body:bodies)
             calculateOrbitTrail(body); 
     }
 }
 
-void Renderer::handleEvents()
+void Renderer::handleEvents(std::vector<CelestialBody*>& bodies)
 {
     while (const std::optional event = window.pollEvent())
     {
@@ -42,6 +45,29 @@ void Renderer::handleEvents()
 
         if(const auto* scrolled = event->getIf<sf::Event::MouseWheelScrolled>()){
             camera.zoom(scrolled->delta > 0 ? 1.1f : 0.9f);
+        }
+        if(const auto* mouseClick = event->getIf<sf::Event::MouseButtonPressed>()){
+            if(mouseClick->button == sf::Mouse::Button::Left){
+                const sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                const sf::Vector2f clickPos = window.mapPixelToCoords(mousePos, window.getView());
+                CelestialBody* selectedObject = nullptr;
+
+                for (auto* body : bodies) {
+                    if (!checkBodyClicked(clickPos, body)) {
+                        continue;
+                    }
+
+                    selectedObject = body;
+                    break;
+                }
+
+                if (selectedObject) {
+                    this->focusedBody = selectedObject;
+                    std::cout << "Selected: " << selectedObject->name << std::endl;
+                } else {
+                    this->focusedBody = nullptr;
+                }
+            }
         }
     }
     static bool wasRightPressed = false;
@@ -63,7 +89,22 @@ void Renderer::handleEvents()
     }
 }
 
+bool Renderer::checkBodyClicked(sf::Vector2f clickPos, CelestialBody* body)
+{
+    float dx = clickPos.x - body->pos_x;
+    float dy = clickPos.y - body->pos_y;
+    float distance = sqrt(dx*dx + dy*dy);
 
+    return distance <= body->radius_px;
+}
+
+void Renderer::refreshBodyLayout(std::vector<CelestialBody*>& bodies)
+{
+    calculateScreenPosition(bodies);
+    for (auto* body : bodies) {
+        calculateBodySize(body);
+    }
+}
 
 void Renderer::closeWindow()
 {
@@ -78,6 +119,16 @@ void Renderer::maximiseWindow()
 {
     HWND hwnd = (HWND)window.getNativeHandle();
     ShowWindow(hwnd, SW_SHOWMAXIMIZED);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    // Update to actual size
+    auto size = window.getSize();
+    WINDOW_WIDTH = size.x;
+    WINDOW_HEIGHT = size.y;
+    camera.setWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    window.setView(sf::View(sf::FloatRect({0.f, 0.f}, {static_cast<float>(WINDOW_WIDTH), static_cast<float>(WINDOW_HEIGHT)})));
+    std::cout << "Window size: " << WINDOW_WIDTH << "x" << WINDOW_HEIGHT << std::endl;
+
 }
 
 void Renderer::loadFont(std::string path)
@@ -88,18 +139,6 @@ void Renderer::loadFont(std::string path)
         std::cout << "Font loaded\n";
 }
 
-// void Renderer::initScale(std::vector<CelestialBody*>& bodies)
-// {
-//     auto maxBody = std::max_element(bodies.begin(), bodies.end(), 
-//     [](const CelestialBody& a, const CelestialBody& b) {
-//         return (a.x*a.x + a.y*a.y) < (b.x*b.x + b.y*b.y);
-//     });
-//     float maxDistance = sqrt(maxBody->x * maxBody->x + maxBody->y * maxBody->y);
-//     distanceScale = log(1 + maxDistance);
-//     targetRadius = WINDOW_WIDTH / 2.0f - (2 * maxBody->radius); // Diameter of the furthest planet sized margin
-//     // targetRadius = std::min(WINDOW_WIDTH, WINDOW_HEIGHT) / 2.0f - (2 * maxBody->radius); // Diameter of the furthest planet sized margin
-// }
-
 void Renderer::calculateBodySize(CelestialBody* body)
 {
 
@@ -109,6 +148,9 @@ void Renderer::calculateBodySize(CelestialBody* body)
 }
 void Renderer::calculateScreenPosition(std::vector<CelestialBody*>& bodies)
 {
+    if(focusedBody){
+        camera.setCenter(focusedBody->x,focusedBody->y);
+    }
     for(auto& body:bodies)
     {   
         auto screenPos = camera.toScreenCoords(body->x, body->y);
@@ -137,8 +179,6 @@ void Renderer::drawBody(CelestialBody* body){
     int& dot_density = body->dot_density;
     sf::Color& color = body->color;
     std::string& name = body->name;
-
-    calculateBodySize(body);
 
     sf::CircleShape boundary(body->radius_px);
     boundary.setPosition({pos_x-body->radius_px,pos_y-body->radius_px});

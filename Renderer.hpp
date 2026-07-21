@@ -19,6 +19,7 @@ class Renderer{
         sf::RenderWindow window;
         std::string name;
         sf::Font font;
+        CelestialBody* focusedBody = nullptr;
 
         bool trail = true;
         static constexpr float EARTH_RADIUS_AU = 4.26e-5f;
@@ -33,7 +34,7 @@ class Renderer{
         
         
         bool isWindowOpen();
-        void handleEvents();
+        void handleEvents(std::vector<CelestialBody*>& bodies);
         void closeWindow();
         void maximiseWindow();
         void draw(std::vector<CelestialBody*>& bodies);
@@ -42,7 +43,8 @@ class Renderer{
         void drawOrbitTrail(CelestialBody* body);
         void loadFont(std::string path);
         void calculateScreenPosition(std::vector<CelestialBody*>& bodies);
+        void refreshBodyLayout(std::vector<CelestialBody*>& bodies);
         void initScale(std::vector<CelestialBody*>& bodies);
         void calculateBodySize(CelestialBody* body);
-
+        bool checkBodyClicked(sf::Vector2f clickPos,CelestialBody* body);
 };

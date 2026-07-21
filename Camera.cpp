@@ -24,3 +24,14 @@ sf::Vector2f Camera::toScreenCoords(double bodyX_AU, double bodyY_AU)
         float screenY = (bodyY_AU - centerY_AU) * pixelsPerAU + WINDOW_HEIGHT / 2;
         return {screenX, screenY};
 }
+
+void Camera::setCenter(float x, float y)
+{
+        this->centerX_AU = x;
+        this->centerY_AU =y;
+}
+
+void Camera::setWindowSize(unsigned int w, unsigned int h) {
+    WINDOW_WIDTH = w;
+    WINDOW_HEIGHT = h;
+}

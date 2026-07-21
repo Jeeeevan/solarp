@@ -87,21 +87,22 @@ int main() {
     sf::Clock deltaClock;
     while (renderer.isWindowOpen()) {
         
-        renderer.handleEvents(); //Start listening for events
+        
+        renderer.handleEvents(bodies);
+        
         for(auto& e:renderer.events){
             switch(e) {
                 case Renderer::AppEvent::close: {
                     state.running = false;
                     break;}
-                case Renderer::AppEvent::togglePause:   {
-                    state.paused = !state.paused; 
-                    break;
+                    case Renderer::AppEvent::togglePause:   {
+                        state.paused = !state.paused; 
+                        break;
+                    }
                 }
             }
-        }
         renderer.events.clear();
         
-        float deltaTime = deltaClock.restart().asSeconds();
         if(!state.running){
             renderer.closeWindow();
         }
@@ -112,7 +113,8 @@ int main() {
             renderer.draw(bodies);
             continue;
         }
-        
+            
+        float deltaTime = deltaClock.restart().asSeconds();
         physics.update(bodies,deltaTime);
         
         renderer.update(bodies);

@@ -14,6 +14,8 @@ class Camera{
         float getPixelsPerAU() const { return pixelsPerAU; }
         Camera(unsigned int WINDOW_WIDTH,unsigned int WINDOW_HEIGHT);
         void zoom(float factor);
+        void setCenter(float x,float y);
         void pan(float pixelDeltaX, float pixelDeltaY);
         sf::Vector2f toScreenCoords(double bodyX_AU, double bodyY_AU);
+        void setWindowSize(unsigned int w, unsigned int h);
 };
